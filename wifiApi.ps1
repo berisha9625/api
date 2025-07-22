@@ -3,7 +3,7 @@ $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
 
 if (-not $ftpPass) {
-    Write-Error "FTP_PASS ortam değişkeni ayarlı değil!"
+    Write-Error "FTP_PASS ortam degiskeni ayarlı degil!"
     exit 1
 }
 
@@ -27,7 +27,7 @@ try {
     $response.Close()
 }
 catch {
-    Write-Host "FTP klasör dosyaları alınamadı: $_"
+    Write-Host "FTP klasor dosyalari alinamadi: $_"
     exit 1
 }
 
@@ -53,8 +53,8 @@ $ftpUploadUrl = $ftpHost + $newFileName
 
 try {
     $webclient.UploadFile($ftpUploadUrl, "STOR", $localFilePath)
-    Write-Host "$newFileName dosyası FTP'ye başarıyla yüklendi."
+    Write-Host "$newFileName dosyası FTP'ye basarıyla yuklendi."
 }
 catch {
-    Write-Host "Dosya yüklenirken hata oluştu: $_"
+    Write-Host "Dosya yuklenirken hata olustu: $_"
 }
