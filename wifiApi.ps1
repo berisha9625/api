@@ -2,7 +2,7 @@ $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
 
 if (-not $ftpPass) {
-    Write-Error "FTP_PASS ortam değişkeni ayarlı değil!"
+    Write-Error "FTP_PASS ortam degiskeni ayarli degil!"
     exit 1
 }
 
@@ -35,8 +35,8 @@ $webclient.Credentials = New-Object System.Net.NetworkCredential($ftpUser, $ftpP
 
 try {
     $webclient.UploadFile($ftpUrl, "STOR", $localFile)
-    Write-Host "Dosya başarıyla FTP'ye yüklendi."
+    Write-Host "Dosya basariyla FTP sistemine yuklendi."
 }
 catch {
-    Write-Host "Hata oluştu: $_"
+    Write-Host "Hata olustu: $_"
 }
