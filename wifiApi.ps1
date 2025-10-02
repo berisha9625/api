@@ -1,3 +1,7 @@
+# Konsol encoding'i UTF-8 yap
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
+# Banner
 $banner = @"
 ██████╗░██╗░░░██╗██╗░░░░░███████╗███╗░░██╗████████╗  
 ██╔══██╗██║░░░██║██║░░░░░██╔════╝████╗░██║╚══██╔══╝  
@@ -15,6 +19,9 @@ $banner = @"
 "@
 
 Write-Host $banner -ForegroundColor Cyan
+
+# Türkçe karakter testi
+Write-Host "Türkçe karakterler: ğüşöçİı" -ForegroundColor Yellow
 
 $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
