@@ -12,7 +12,7 @@ from PIL import Image
 import ctypes
 
 
-# Edit this time as you want...
+
 sleep(30) 
 screenshot = pyautogui.screenshot()
 screenshot.save("screenshot.png")
