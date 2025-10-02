@@ -27,7 +27,7 @@ $banner = @"
       ::::~.^:^:^::^:^ ::::~..^::::::.:.::~.~:^:^:^: ^:::~.^:^:~..^::^::^ ^:::::::::::^::^ ^:::^7? 
     
 "@
-Write-Host $banner -ForegroundColor Red
+Write-Host $banner -ForegroundColor Cyan
 
 $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
