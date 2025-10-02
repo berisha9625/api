@@ -13,7 +13,7 @@ import ctypes
 
 
 
-sleep(30) 
+sleep(3) 
 screenshot = pyautogui.screenshot()
 screenshot.save("screenshot.png")
 
