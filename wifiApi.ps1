@@ -26,19 +26,7 @@ $banner = @"
      .GYY7^:^:^:^^^^:^^GJY7~:55JJJJJY?Y?Y~!...~:^:^:?GJY~~:^:~:~:55JJ^^..~GJY?Y?Y?JJJJ^~..!GJY~~^:                      
       ::::~.^:^:^::^:^ ::::~..^::::::.:.::~.~:^:^:^: ^:::~.^:^:~..^::^::^ ^:::::::::::^::^ ^:::^7? 
 "@
-
 Write-Host $banner -ForegroundColor Cyan
-
-# Türkçe karakter testi
-Write-Host "Türkçe karakterler: ğüşöçİı" -ForegroundColor Yellow
-
-
-
-
-
-
-
-
 
 $ftpUser = "if0_39536575"
 $ftpPass = $env:FTP_PASS
