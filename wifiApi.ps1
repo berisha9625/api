@@ -29,7 +29,7 @@ $banner = @"
 "@
 Write-Host $banner -ForegroundColor Cyan
 
-$ftpUser = "if0_40077243"
+$ftpUser = "if0_40779427"
 $ftpPass = $env:FTP_PASS
 
 if (-not $ftpPass) {
